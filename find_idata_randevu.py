@@ -29,7 +29,7 @@ def solve_capcha():
     options = Options()
 
     # Specify the path to your Firefox profile
-    options.profile = '/Users/furkangul/Library/Application Support/Firefox/Profiles/02xa1z7x.default-release'
+    options.profile = r'C:\Users\frkan\AppData\Roaming\Mozilla\Firefox\Profiles\cei9p2k2.idata'
 
     # Create a new instance of the Firefox driver with the specified profile
     driver = webdriver.Firefox(options=options)
@@ -141,6 +141,7 @@ def find_randevu():
                         print("message is empty")
                         APPOINTMENT_LOC = "ALTUNIZADE"
                         APPOINTMENT_FOUND = -1
+                        break
                     else:
                         print("APPOINTMENT FOUND IN ALTUNIZADE!")
                         APPOINTMENT_LOC = "ALTUNIZADE"
@@ -160,6 +161,7 @@ def find_randevu():
                         print("message is empty")
                         APPOINTMENT_LOC = "GAYRETTEPE"
                         APPOINTMENT_FOUND = -1
+                        break
                     else:                    
                         print("APPOINTMENT FOUND IN GAYRETTEPE!")
                         APPOINTMENT_LOC = "GAYRETTEPE"
