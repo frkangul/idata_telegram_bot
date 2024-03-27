@@ -24,7 +24,12 @@ async def randevu_ara(update: Update, context: ContextTypes.DEFAULT_TYPE):
         elif code == -1:
             logging.info(f"{location} da randevu bulunmuş olabilir! Bot aramaya devam ediyor.")
             await context.bot.send_message(chat_id=update.effective_chat.id, text=f"{location} da randevu bulunmuş olabilir! Bot aramaya devam ediyor.")
-            await asyncio.sleep(60)  # Wait for 60 seconds before retrying
+        elif code == 0:
+            logging.info("Henüz randevu bulunmadi! Bot aramaya devam ediyor.")
+        else:
+            logging.info("Ne oldugu belirsiz.")
+        await asyncio.sleep(60)  # Wait for 60 seconds before retrying
+    logging.info(f"{location} da randevu bulundu! Bot aramayi durdurdu.")
 
 async def prime_radevu_ara(update: Update, context: ContextTypes.DEFAULT_TYPE):
     # to be imlemented
