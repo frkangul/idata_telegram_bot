@@ -65,7 +65,7 @@ def solve_capcha():
         if capcha_error_counter > MAX_RETRIES:
             capcha_error_counter = 0
             print("driver refresh edildi!")
-            driver.refresh()
+            driver.get(current_url) # Since refreshing is prompting a firefox warning window
         # Wait for 10 seconds to complete captcha by nopecha
         time.sleep(10)
 
