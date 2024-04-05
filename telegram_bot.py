@@ -16,7 +16,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def randevu_ara(update: Update, context: ContextTypes.DEFAULT_TYPE):
     logging.info("Randevu aranmaya baslandi!")
     while True:
-        location, code = find_randevu()
+        location, code = find_randevu(logging)
         if code == 1:
             logging.info(f"{location} da randevu bulundu! Bot aramayi durdurdu.")
             await context.bot.send_message(chat_id=update.effective_chat.id, text=f"{location} da randevu bulundu! Bot aramayi durdurdu.")

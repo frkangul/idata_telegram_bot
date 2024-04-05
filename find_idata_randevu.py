@@ -1,4 +1,5 @@
 import time
+import random
 
 from selenium import webdriver
 from selenium.common.exceptions import (
@@ -21,7 +22,7 @@ def click_button_by_xpath(xpath, driver, retry=0):
         # print("Button clicked successfully.")
     except (NoSuchElementException, StaleElementReferenceException):
         # print("Element not found or stale, retrying...")
-        time.sleep(1)
+        time.sleep(random.uniform(1, 3))
         click_button_by_xpath(xpath, driver, retry=retry + 1)
         
 def solve_capcha():
@@ -38,7 +39,7 @@ def solve_capcha():
     driver.get("https://ita-schengen.idata.com.tr/tr")
 
     # Wait for 10 seconds
-    time.sleep(10)
+    time.sleep(random.uniform(9, 11))
 
     # Find the element by CSS selector
     try:
@@ -47,7 +48,7 @@ def solve_capcha():
     except NoSuchElementException:
         print("Randevu al butonu yok.")
 
-    time.sleep(2)
+    time.sleep(random.uniform(1, 2))
 
     try:
         # Click the button
@@ -55,7 +56,7 @@ def solve_capcha():
     except NoSuchElementException:
         print("Tamam butonu yok.")
 
-    time.sleep(2)
+    time.sleep(random.uniform(1, 3))
     
     # Get the current URL
     current_url = driver.current_url
@@ -67,7 +68,7 @@ def solve_capcha():
             print("driver refresh edildi!")
             driver.get(current_url) # Since refreshing is prompting a firefox warning window
         # Wait for 10 seconds to complete captcha by nopecha
-        time.sleep(10)
+        time.sleep(random.uniform(9, 11))
 
         # Find the element by CSS selector
         try:
@@ -76,7 +77,7 @@ def solve_capcha():
         except NoSuchElementException:
             print("In-While, Randevu al butonu yok.")
 
-        time.sleep(2)
+        time.sleep(random.uniform(1, 3))
 
         try:
             # Click the button
@@ -84,7 +85,7 @@ def solve_capcha():
         except NoSuchElementException:
             print("In-While, Tamam butonu yok.")
             
-        time.sleep(2)
+        time.sleep(random.uniform(1, 3))
         
         # Get the current URL
         current_url = driver.current_url
@@ -96,40 +97,43 @@ def fill_form(driver, ofis="8"): # 8 altunizade, 1 gayrettepe
     ikametgah_dropdown = Select(driver.find_element(By.XPATH, '//*[@id="city"]'))
     ikametgah_dropdown.select_by_value("34")
     # Wait for a moment to see the selection
-    time.sleep(1)
+    time.sleep(random.uniform(1, 3))
 
     ofis_dropdown = Select(driver.find_element(By.XPATH, '//*[@id="office"]'))
     ofis_dropdown.select_by_value(ofis) # 8 altunizade, 1 gayrettepe
     # Wait for a moment to see the selection
-    time.sleep(1)
+    time.sleep(random.uniform(1, 3))
 
     amac_dropdown = Select(driver.find_element(By.XPATH, '//*[@id="getapplicationtype"]'))
     amac_dropdown.select_by_value("2") # turistik
     # Wait for a moment to see the selection
-    time.sleep(1)
+    time.sleep(random.uniform(1, 3))
 
     hizmet_dropdown = Select(driver.find_element(By.XPATH, '//*[@id="officetype"]'))
     hizmet_dropdown.select_by_value("1") # 1 standart, 4 prime
     # Wait for a moment to see the selection
-    time.sleep(1)
+    time.sleep(random.uniform(1, 3))
 
     kisi_dropdown = Select(driver.find_element(By.XPATH, '//*[@id="totalPerson"]'))
     kisi_dropdown.select_by_value("2") # 2 kişi
     # Wait for a moment to see the selection
-    time.sleep(1)    
+    time.sleep(random.uniform(1, 3))    
     
-def find_randevu():
+def find_randevu(logging):
     APPOINTMENT_FOUND = 0
     APPOINTMENT_LOC = ""
     while APPOINTMENT_FOUND == 0:
+        logging.info("Capcha çözümü başladi ...")
         driver = solve_capcha()
-
+        logging.info("Capcha çözümü bitti!")
+        
         # 19 dakika içinde denemeler yapabilirsin
         # Record the start time
         start_time = time.time()
         # Define the duration (in seconds) for the function to run
         duration = 10 * 60  # 12 minutes * 60 seconds
         # Run the function repeatedly every minute for the specified duration
+        logging.info("Form doldurulmaya başlandi!")
         while (time.time() - start_time) < duration:
             fill_form(driver)
             try:
@@ -149,7 +153,7 @@ def find_randevu():
                         break    
             except Exception:
                 print("message is not available")
-            time.sleep(2)  # Sleep for 10 seconds before calling the function again
+            time.sleep(random.uniform(1, 3))  # Sleep for 10 seconds before calling the function again
             
             fill_form(driver, ofis="1")
             try:
@@ -169,8 +173,9 @@ def find_randevu():
                         break
             except Exception:
                 print("message is not available")
-            time.sleep(10)  # Sleep for 10 seconds before calling the function again
+            time.sleep(random.uniform(9, 11))  # Sleep for 10 seconds before calling the function again
             # driver.refresh()  
+        logging.info("Form doldurulmasi bitti!")
         driver.quit()
     driver.quit()
     return APPOINTMENT_LOC, APPOINTMENT_FOUND
