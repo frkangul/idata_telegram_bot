@@ -41,14 +41,22 @@ def solve_capcha():
     # Wait for 10 seconds
     time.sleep(random.uniform(9, 11))
 
-    # Find the element by CSS selector
+    # Find the element by CSS selectors
+    try:
+        # Click the button
+        click_button_by_xpath('//*[@id="cookieJvns"]', driver)
+    except NoSuchElementException:
+        print("Anladim butonu yok.")
+
+    time.sleep(random.uniform(1, 3))
+    
     try:
         # Click the button
         click_button_by_xpath('//*[@id="confirmationbtn"]', driver)
     except NoSuchElementException:
         print("Randevu al butonu yok.")
 
-    time.sleep(random.uniform(1, 2))
+    time.sleep(random.uniform(1, 3))
 
     try:
         # Click the button
