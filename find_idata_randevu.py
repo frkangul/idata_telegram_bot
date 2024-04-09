@@ -5,10 +5,13 @@ from selenium import webdriver
 from selenium.common.exceptions import (
     NoSuchElementException,
     StaleElementReferenceException,
+    ElementNotInteractableException,
+    TimeoutException,
 )
 from selenium.webdriver.common.by import By
 from selenium.webdriver.firefox.options import Options
-from selenium.webdriver.support.ui import Select
+from selenium.webdriver.support.ui import Select, WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 
 MAX_RETRIES = 5  # Maximum number of retry attempts
 
@@ -18,9 +21,11 @@ def click_button_by_xpath(xpath, driver, retry=0):
 
     try:
         button = driver.find_element(By.XPATH, xpath)
+        # Scroll the element into view
+        driver.execute_script("arguments[0].scrollIntoView(true);", button)
         button.click()
         # print("Button clicked successfully.")
-    except (NoSuchElementException, StaleElementReferenceException):
+    except (NoSuchElementException, StaleElementReferenceException, ElementNotInteractableException):
         # print("Element not found or stale, retrying...")
         time.sleep(random.uniform(1, 3))
         click_button_by_xpath(xpath, driver, retry=retry + 1)
@@ -41,12 +46,12 @@ def solve_capcha():
     # Wait for 10 seconds
     time.sleep(random.uniform(9, 11))
 
-    # Find the element by CSS selectors
+    # Wait until the anladim button is clickable
     try:
-        # Click the button
-        click_button_by_xpath('//*[@id="cookieJvns"]', driver)
-    except NoSuchElementException:
-        print("Anladim butonu yok.")
+        button = WebDriverWait(driver, 20).until(EC.element_to_be_clickable((By.XPATH, '//*[@id="cookieJvns"]')))
+        button.click()
+    except TimeoutException:
+        print("Form doldururken anladim butonu yok.")
 
     time.sleep(random.uniform(1, 3))
     
@@ -143,6 +148,12 @@ def find_randevu(logging):
         # Run the function repeatedly every minute for the specified duration
         logging.info("Form doldurulmaya başlandi!")
         while (time.time() - start_time) < duration:
+            # Wait until the anladim button is 
+            try:
+                button = WebDriverWait(driver, 20).until(EC.element_to_be_clickable((By.XPATH, '//*[@id="cookieJvns"]')))
+                button.click()
+            except TimeoutException:
+                print("Form doldururken anladim butonu yok.")
             fill_form(driver)
             try:
                 message = driver.find_element(By.XPATH, '/html/body/div[2]/div/div/div/div[3]/div/form/div/div[1]/div[3]/div[7]/div').text
